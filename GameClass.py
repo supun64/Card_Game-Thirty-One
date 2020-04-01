@@ -18,14 +18,29 @@ def list_permutations(list_1, list_2):
     return nest_list
 
 
+def see_deck_card(card_pack):
+    """
+    This will see the top card on the deck
+    :return: Top card
+    """
+    top_card = random.choice(card_pack)
+    card_pack.remove(top_card)
+    return top_card
+
+
 class Player:
     """
     This is the class of a player which are playing the game
     """
-    pack_suit = ["H", "C", "S", "D"]
-    pack_value = {"A": 11, "K": 10, "Q": 10, "J": 10, "10": 10, "9": 9,
-                  "8": 8, "7": 7, "6": 6, "5": 5, "4": 4, "3": 3, "2": 2}
-    card_pack = list_permutations(pack_suit, list(pack_value.keys()))  # we can create the card pack using
+    # This is a comment below
+    """
+    This is a comment
+    previously i was using a class attribute named card_pack but in the game it was needed to be work
+    independent with class objects so I removed it from the class attribute and put an attribute as 
+    card_pack in the get_hand method because it requires a card pack which is common for all objects
+    in this class. and also see_deck_card which was in this class was non static(it was not a method 
+    that is unique for each instances) so I removed it from this class and made it a function"""
+
     game_round = True
 
     def __init__(self, name):
@@ -33,7 +48,7 @@ class Player:
         self.hand = []
         self.lives = 3
 
-    def get_hand(self):
+    def get_hand(self, card_pack):
         """
         This method will chose the player a random 3 cards, THIS IS DONE AT THE BEGINNING OF THE GAME
         :return: players hand
@@ -41,9 +56,9 @@ class Player:
         self.hand = []
 
         while len(self.hand) != 3:
-            rand_card = random.choice(self.card_pack)
+            rand_card = random.choice(card_pack)
             self.hand.append(rand_card)
-            self.card_pack.remove(rand_card)
+            card_pack.remove(rand_card)
 
         return self.hand
 
@@ -73,15 +88,6 @@ class Player:
         self.hand.append(card)
         self.remove_card(old_card)
 
-    def see_deck_card(self):
-        """
-        This will see the top card on the deck
-        :return: Top card
-        """
-        top_card = random.choice(self.card_pack)
-        self.card_pack.remove(top_card)
-        return top_card
-
     def knock(self):
         """
         after this knock there will be only one chance for other players means this will be the last round
@@ -90,18 +96,14 @@ class Player:
         self.game_round = False
         return self.game_round
 
-    def lose(self):
-        """
-        This is a method to reduce a players life when they are lost
-        :return: None
-        """
-        self.lives -= 1
-
 
 class Dealer(Player):
     """
     This is a class for single AI player in the game
     """
+    pack_suit = ["H", "C", "S", "D"]
+    pack_value = {"A": 11, "K": 10, "Q": 10, "J": 10, "10": 10, "9": 9,
+                  "8": 8, "7": 7, "6": 6, "5": 5, "4": 4, "3": 3, "2": 2}
 
     def __init__(self):
         Player.__init__(self, name="Alex")
